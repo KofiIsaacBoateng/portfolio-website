@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --surface: #111827;
+  --foreground: #e5e7eb;
+  --muted: #94a3b8;
+  --accent: #00d5ff;
+  --border: rgba(148, 163, 184, 0.16);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-performa);
+  --font-sans: var(--font-poppins);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
+.container {
+  width: min(100% - 3rem, 1440px);
+  margin-inline: auto;
+}
+
+@media (max-width: 640px) {
+  .container {
+    width: min(100% - 2rem, 1440px);
+  }
+}
+
+.identity-card {
+  position: fixed;
+  isolation: isolate;
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.045);
+
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+
+  border: 1px solid transparent;
+
+  background-image:
+    linear-gradient(rgba(15, 18, 22, 0.35), rgba(15, 18, 22, 0.35)),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0.03) 45%,
+      rgba(255, 255, 255, 0.2)
+    );
+
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.identity-card::before {
+  content: none;
 }
