@@ -16,7 +16,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-100 backdrop-blur-md flex items-center justify-between px-4 py-6 md:px-10">
+      <header className="fixed inset-x-0 top-0 z-100 backdrop-blur-none flex items-center justify-between px-4 py-6 md:px-10">
         {/* Logo */}
         <a
           href="#home"

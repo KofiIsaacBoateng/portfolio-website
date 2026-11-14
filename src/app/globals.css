@@ -12,6 +12,7 @@
 @theme inline {
   --font-heading: var(--font-performa);
   --font-sans: var(--font-poppins);
+  --font-terminal: var(--font-jetbrains-mono);
 }
 
 * {
@@ -88,4 +89,18 @@ a {
 
 .identity-card::before {
   content: none;
+}
+
+.terminal-cursor {
+  animation: smooth-blink 1s steps(1, end) infinite;
+}
+
+@keyframes smooth-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }

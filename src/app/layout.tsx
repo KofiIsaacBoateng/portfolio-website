@@ -1,4 +1,6 @@
 import localFont from "next/font/local";
+import { JetBrains_Mono } from "next/font/google";
+
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -7,6 +9,11 @@ export const metadata: Metadata = {
   description:
     "A portfolio exploring software engineering, infrastructure, and building useful technology.",
 };
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+});
 
 const performa = localFont({
   src: [
@@ -62,7 +69,7 @@ export default function RootLayout({
       data-qb-installed
       className={`${performa.variable} ${poppins.variable}`}
     >
-      <body>{children}</body>
+      <body className={`${jetBrainsMono.variable}`}>{children}</body>
     </html>
   );
 }

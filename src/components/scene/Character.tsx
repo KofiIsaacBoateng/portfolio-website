@@ -3,6 +3,7 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
+import type { RefObject } from "react";
 import * as THREE from "three";
 
 const MODEL_PATH = "/models/character.glb";
@@ -12,6 +13,7 @@ interface CharacterProps {
   scale?: number;
   rotation?: [number, number, number];
   spin?: boolean;
+  groupRef?: RefObject<THREE.Group | null>;
 }
 
 export default function Character({
@@ -19,9 +21,11 @@ export default function Character({
   scale = 1,
   rotation = [0, 0, 0],
   spin = false,
+  groupRef,
 }: CharacterProps) {
   const { scene } = useGLTF(MODEL_PATH);
-  const groupRef = useRef<THREE.Group>(null);
+
+  const idleGroupRef = useRef<THREE.Group>(null);
   const spinStartRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -39,7 +43,6 @@ export default function Character({
             material.metalnessMap = null;
             material.metalness = 0;
             material.roughness = 0.75;
-            material.roughnessMap = material.roughnessMap;
             material.normalScale.set(0.85, 0.85);
             material.needsUpdate = true;
           }
@@ -49,12 +52,11 @@ export default function Character({
   }, [scene]);
 
   useFrame(({ clock }) => {
-    const group = groupRef.current;
+    const group = idleGroupRef.current;
     if (!group) return;
 
     const time = clock.elapsedTime;
 
-    // Full 360-degree intro spin
     if (spin) {
       if (spinStartRef.current === null) {
         spinStartRef.current = time;
@@ -64,29 +66,30 @@ export default function Character({
 
       const easedProgress = 1 - Math.pow(1 - progress, 3);
 
-      group.rotation.y = rotation[1] + easedProgress * Math.PI * 2;
+      group.rotation.y = easedProgress * Math.PI * 2;
     } else {
       spinStartRef.current = null;
-      group.rotation.y = rotation[1];
+      group.rotation.y = 0;
     }
 
-    // Subtle breathing
-    group.position.y = position[1] + Math.sin(time * 1.2) * 0.015;
+    // Breathing
+    group.position.y = Math.sin(time * 1.2) * 0.015;
 
-    // Gentle sway after the spin
+    // Idle sway
     if (spin && spinStartRef.current !== null) {
       const elapsed = time - spinStartRef.current;
 
       if (elapsed >= 1.3) {
-        group.rotation.y =
-          rotation[1] + Math.PI * 2 + Math.sin(time * 0.7) * 0.025;
+        group.rotation.y = Math.PI * 2 + Math.sin(time * 0.7) * 0.025;
       }
     }
   });
 
   return (
     <group ref={groupRef} position={position} scale={scale} rotation={rotation}>
-      <primitive object={scene} />
+      <group ref={idleGroupRef}>
+        <primitive object={scene} />
+      </group>
     </group>
   );
 }
