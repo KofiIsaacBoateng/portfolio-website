@@ -23,7 +23,7 @@ export function useAcquisitionMotion({
   floatRefs,
   visualRefs,
   reticleMarkerRef,
-  zoomScale = 1.5,
+  zoomScale = 1.45,
 }: AcquisitionOptions) {
   const pauseBackground = useCallback(() => {
     const elements = [
@@ -60,26 +60,23 @@ export function useAcquisitionMotion({
 
       if (!rig || !marker || !root || !target) return;
 
-      // Prevent an old acquisition animation from interfering.
-      gsap.killTweensOf(marker);
-      gsap.killTweensOf(rig);
+      gsap.killTweensOf([marker, rig]);
 
       const search = gsap.timeline();
 
-      // The reticle hesitates and explores before committing.
-      for (let i = 0; i < 5; i++) {
-        const x = gsap.utils.random(-110, 110);
-        const y = gsap.utils.random(-85, 85);
+      // Quick reticle scan hops before locking onto target
+      for (let i = 0; i < 3; i++) {
+        const x = gsap.utils.random(-95, 95);
+        const y = gsap.utils.random(-75, 75);
 
         search.to(marker, {
           left: x,
           top: y,
-          duration: gsap.utils.random(0.22, 0.48),
+          duration: gsap.utils.random(0.16, 0.28),
           ease: "sine.inOut",
         });
       }
 
-      // Pause the environment before final alignment.
       search.call(() => {
         pauseBackground();
 
@@ -100,25 +97,23 @@ export function useAcquisitionMotion({
           onComplete: onLocked,
         });
 
-        // Reticle moves onto the selected illustration.
         alignment.to(marker, {
           left: x,
           top: y,
-          duration: 0.9,
+          duration: 0.65,
           ease: "power3.inOut",
         });
 
-        // Both now move together into the centre of the viewport.
         alignment.to(
           rig,
           {
             x: -x * zoomScale,
             y: -y * zoomScale,
             scale: zoomScale,
-            duration: 1.35,
+            duration: 0.95,
             ease: "power3.inOut",
           },
-          "-=0.15",
+          "-=0.1",
         );
       });
 
@@ -141,6 +136,9 @@ export function useAcquisitionMotion({
 
       if (!rig || !marker) return;
 
+      // Kill any active acquire/search tweens so reset never fights in-flight hops
+      gsap.killTweensOf([marker, rig]);
+
       const timeline = gsap.timeline({
         onComplete: () => {
           resumeBackground();
@@ -148,22 +146,28 @@ export function useAcquisitionMotion({
         },
       });
 
-      // Return the entire camera rig to its scanning position.
-      timeline.to(rig, {
-        x: 0,
-        y: 0,
-        scale: 1,
-        duration: 1.2,
-        ease: "power3.inOut",
-      });
+      timeline.to(
+        rig,
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          duration: 0.85,
+          ease: "power3.inOut",
+        },
+        0,
+      );
 
-      // Return the reticle to its default position.
-      timeline.to(marker, {
-        left: 0,
-        top: 0,
-        duration: 0.55,
-        ease: "power2.inOut",
-      });
+      timeline.to(
+        marker,
+        {
+          left: 0,
+          top: 0,
+          duration: 0.45,
+          ease: "power2.inOut",
+        },
+        0,
+      );
 
       return timeline;
     },

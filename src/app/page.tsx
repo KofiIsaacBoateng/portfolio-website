@@ -1,10 +1,9 @@
-// import About from "@/components/about/studies/About";
-import IntroController from "@/components/ui/IntroController";
+import Portfolio from "@/components/portfolio/Portfolio";
 
 export default function Home() {
   return (
     <main>
-      <IntroController />
+      <Portfolio />
     </main>
   );
 }

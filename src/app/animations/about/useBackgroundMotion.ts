@@ -35,7 +35,6 @@ export function useBackgroundMotion({
 
       if (!orbit || !reticle) return;
 
-      // Continuous orbital rotation.
       gsap.to(orbit, {
         rotationZ: -360,
         duration: orbitDuration,
@@ -43,7 +42,6 @@ export function useBackgroundMotion({
         repeat: -1,
       });
 
-      // Counter-rotate each illustration so it remains upright.
       visualRefs.current.forEach((visual) => {
         if (!visual) return;
 
@@ -55,7 +53,6 @@ export function useBackgroundMotion({
         });
       });
 
-      // Subtle, independent movement for each illustration.
       floatRefs.current.forEach((element, index) => {
         if (!element) return;
 
@@ -84,7 +81,6 @@ export function useBackgroundMotion({
           });
       });
 
-      // Gentle reticle breathing.
       gsap.to(reticle, {
         scale: 1.035,
         opacity: 0.78,
@@ -94,6 +90,6 @@ export function useBackgroundMotion({
         yoyo: true,
       });
     },
-    { dependencies: [], revertOnUpdate: false },
+    { scope: rootRef, dependencies: [], revertOnUpdate: false },
   );
 }

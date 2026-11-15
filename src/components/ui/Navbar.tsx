@@ -84,7 +84,7 @@ export default function Header() {
       {/* Side drawer */}
       <aside
         aria-hidden={!isOpen}
-        className={`fixed right-0 top-0 z-90 flex h-svh w-full flex-col justify-center bg-[#080808] px-8 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] sm:w-[min(480px,85vw)] sm:px-14 ${
+        className={`fixed right-0 top-0  z-90 flex h-dvh w-full flex-col justify-center bg-[#050505] px-8 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] sm:w-[min(480px,85vw)] sm:px-14 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

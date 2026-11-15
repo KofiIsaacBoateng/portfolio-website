@@ -21,12 +21,6 @@ export default function Intro({ onReveal, onComplete }: IntroProps) {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Establish initial positions before the browser paints.
-      // gsap.set([leftRef.current, rightRef.current], {
-      //   yPercent: 100,
-      //   opacity: 0,
-      // });
-
       const timeline = gsap.timeline({
         onComplete: () => completeRef.current(),
       });
@@ -70,7 +64,7 @@ export default function Intro({ onReveal, onComplete }: IntroProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed font-heading font-extrabold inset-0 overflow-hidden z-150"
+      className="fixed font-heading font-extrabold inset-0 overflow-hidden z-120"
     >
       {/* Black backdrop */}
       <div ref={backdropRef} className="absolute inset-0 bg-black" />
