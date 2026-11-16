@@ -24,7 +24,7 @@ export default function GeometricStudy() {
             d="M12 0H0V12"
             stroke={colors.muted}
             strokeWidth={strokes.fine}
-            opacity={opacity.subtle}
+            opacity={0.25}
           />
         </pattern>
 
@@ -37,43 +37,42 @@ export default function GeometricStudy() {
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor={colors.highlight} />
-          <stop offset="1" stopColor={colors.secondary} />
+          <stop offset="1" stopColor={colors.primary} />
         </linearGradient>
       </defs>
 
       {/* Corner registration marks */}
       <g
-        stroke={colors.secondary}
-        strokeWidth={strokes.guide}
+        stroke={colors.highlight}
+        strokeWidth={strokes.secondary}
         opacity={opacity.secondary}
       >
-        <path d="M80 65H105 M80 65V90" />
-        <path d="M695 65H720 M720 65V90" />
-        <path d="M80 505H105 M80 480V505" />
-        <path d="M695 505H720 M720 480V505" />
+        <path d="M75 62H105 M75 62V92" />
+        <path d="M695 62H725 M725 62V92" />
+        <path d="M75 508H105 M75 478V508" />
+        <path d="M695 508H725 M725 478V508" />
       </g>
 
       {/* Main construction boundary */}
       <rect
-        x="105"
-        y="65"
-        width="570"
-        height="440"
+        x="100"
+        y="62"
+        width="580"
+        height="446"
         stroke={colors.secondary}
         strokeWidth={strokes.guide}
-        opacity={opacity.secondary}
+        opacity={opacity.guide}
       />
 
       {/* Reference axes */}
       <g
-        stroke={colors.primary}
+        stroke={colors.secondary}
         strokeWidth={strokes.guide}
-        strokeDasharray="4 7"
+        strokeDasharray="5 7"
         opacity={opacity.guide}
       >
-        <path d="M350 35V535" />
-        <path d="M70 285H710" />
-        <path d="M350 55L350 515" />
+        <path d="M350 32V538" />
+        <path d="M68 285H712" />
       </g>
 
       {/* Primary geometric form */}
@@ -81,8 +80,8 @@ export default function GeometricStudy() {
         cx="350"
         cy="285"
         r="175"
-        stroke={colors.primary}
-        strokeWidth={strokes.primary}
+        stroke={colors.highlight}
+        strokeWidth={strokes.primary + 0.4}
         opacity={opacity.primary}
       />
 
@@ -90,8 +89,8 @@ export default function GeometricStudy() {
       <circle
         cx="350"
         cy="285"
-        r="165"
-        stroke={colors.secondary}
+        r="163"
+        stroke={colors.primary}
         strokeWidth={strokes.secondary}
         opacity={opacity.secondary}
       />
@@ -99,10 +98,10 @@ export default function GeometricStudy() {
       <circle
         cx="350"
         cy="285"
-        r="145"
-        stroke={colors.primary}
+        r="142"
+        stroke={colors.secondary}
         strokeWidth={strokes.guide}
-        strokeDasharray="3 6"
+        strokeDasharray="4 6"
         opacity={opacity.secondary}
       />
 
@@ -110,18 +109,18 @@ export default function GeometricStudy() {
         cx="485"
         cy="245"
         r="105"
-        stroke={colors.primary}
-        strokeWidth={strokes.secondary}
-        opacity={opacity.secondary}
+        stroke={colors.highlight}
+        strokeWidth={strokes.primary}
+        opacity={0.9}
       />
 
       <circle
         cx="485"
         cy="245"
-        r="88"
+        r="86"
         stroke={colors.secondary}
         strokeWidth={strokes.guide}
-        strokeDasharray="2 5"
+        strokeDasharray="3 5"
         opacity={opacity.secondary}
       />
 
@@ -132,8 +131,8 @@ export default function GeometricStudy() {
         width="350"
         height="350"
         stroke={colors.primary}
-        strokeWidth={strokes.guide}
-        strokeDasharray="5 6"
+        strokeWidth={strokes.secondary}
+        strokeDasharray="6 6"
         opacity={opacity.secondary}
       />
 
@@ -158,14 +157,14 @@ export default function GeometricStudy() {
         {Array.from({ length: 15 }, (_, i) => (
           <path
             key={`horizontal-${i}`}
-            d={`M${175 + i * 25} 100V${i % 2 === 0 ? 106 : 103}`}
+            d={`M${175 + i * 25} 98V${i % 2 === 0 ? 106 : 102}`}
           />
         ))}
 
         {Array.from({ length: 15 }, (_, i) => (
           <path
             key={`vertical-${i}`}
-            d={`M${165 + (i % 2 === 0 ? 6 : 3)} ${110 + i * 25}H${165}`}
+            d={`M${163 + (i % 2 === 0 ? 8 : 4)} ${110 + i * 25}H${163}`}
           />
         ))}
       </g>
@@ -173,66 +172,67 @@ export default function GeometricStudy() {
       {/* Dimension lines */}
       <g
         stroke={colors.highlight}
-        strokeWidth={strokes.guide}
+        strokeWidth={strokes.secondary}
         opacity={opacity.annotation}
       >
-        <path d="M175 80V55 M525 80V55 M175 65H525" />
-        <path d="M545 110H565 M545 460H565 M555 110V460" />
-        <path d="M175 72L183 68 M175 72L183 76" />
-        <path d="M525 72L517 68 M525 72L517 76" />
+        <path d="M175 80V54 M525 80V54 M175 64H525" />
+        <path d="M545 110H566 M545 460H566 M556 110V460" />
+        <path d="M175 72L184 68 M175 72L184 76" />
+        <path d="M525 72L516 68 M525 72L516 76" />
       </g>
 
       {/* Radial reference */}
       <path
         d="M350 285L485 245"
         stroke={colors.highlight}
-        strokeWidth={strokes.secondary}
-        strokeDasharray="3 4"
+        strokeWidth={strokes.primary}
+        strokeDasharray="4 4"
         opacity={opacity.primary}
       />
 
       {/* Control points */}
       <g fill={colors.highlight}>
-        <circle cx="350" cy="110" r="3.5" />
-        <circle cx="350" cy="460" r="3.5" />
-        <circle cx="175" cy="285" r="3.5" />
-        <circle cx="525" cy="285" r="3.5" />
-        <circle cx="350" cy="285" r="3" />
-        <circle cx="485" cy="245" r="3" />
+        <circle cx="350" cy="110" r="4" />
+        <circle cx="350" cy="460" r="4" />
+        <circle cx="175" cy="285" r="4" />
+        <circle cx="525" cy="285" r="4" />
+        <circle cx="350" cy="285" r="3.5" />
+        <circle cx="485" cy="245" r="3.5" />
       </g>
 
       {/* Fine centre markers */}
       <g
         stroke={colors.highlight}
-        strokeWidth={strokes.fine}
+        strokeWidth={strokes.secondary}
         opacity={opacity.primary}
       >
-        <path d="M337 285H363 M350 272V298" />
-        <circle cx="350" cy="285" r="7" />
-        <circle cx="485" cy="245" r="7" />
+        <path d="M335 285H365 M350 270V300" />
+        <circle cx="350" cy="285" r="8" />
+        <circle cx="485" cy="245" r="8" />
       </g>
 
-      {/* Annotations */}
+      {/* Enlarged technical annotations */}
       <g
-        fill={colors.primary}
-        fontSize="10"
-        letterSpacing="2"
+        fill={colors.highlight}
+        fontSize="12"
+        fontWeight="600"
+        letterSpacing="2.2"
         fontFamily="monospace"
         opacity={opacity.annotation}
       >
-        <text x="105" y="42">
-          GEOMETRIC STUDY / 001
+        <text x="100" y="38">
+          GEOMETRIC STUDY // 001
         </text>
-        <text x="570" y="115">
+        <text x="572" y="114">
           RADIUS
         </text>
-        <text x="570" y="132">
+        <text x="572" y="134" fontWeight="700">
           R = 175
         </text>
-        <text x="175" y="485">
+        <text x="175" y="492">
           CONSTRUCTION AXIS
         </text>
-        <text x="175" y="525">
+        <text x="175" y="534">
           FORM / PROPORTION / STRUCTURE
         </text>
       </g>
@@ -240,41 +240,43 @@ export default function GeometricStudy() {
       {/* Handwritten annotation */}
       <g opacity={opacity.annotation}>
         <text
-          x="540"
+          x="535"
           y="390"
           fill={colors.highlight}
-          fontSize="15"
+          fontSize="17"
           fontStyle="italic"
           fontFamily="cursive"
-          transform="rotate(-5 540 390)"
+          transform="rotate(-5 535 390)"
         >
           geometric relationships
         </text>
 
         <path
-          d="M540 400Q520 420 495 410"
+          d="M535 402Q515 422 490 412"
           stroke={colors.highlight}
-          strokeWidth={strokes.guide}
+          strokeWidth={strokes.secondary}
         />
       </g>
 
-      {/* Small coordinate labels */}
+      {/* Enlarged coordinate labels */}
       <g
-        fill={colors.muted}
-        fontSize="8"
+        fill={colors.primary}
+        fontSize="11"
+        fontWeight="600"
         fontFamily="monospace"
-        letterSpacing="1"
+        letterSpacing="1.2"
+        opacity={0.85}
       >
-        <text x="340" y="96">
+        <text x="338" y="94">
           Y+
         </text>
-        <text x="535" y="289">
+        <text x="536" y="289">
           X+
         </text>
-        <text x="158" y="289">
+        <text x="146" y="289">
           X-
         </text>
-        <text x="340" y="477">
+        <text x="338" y="479">
           Y-
         </text>
       </g>

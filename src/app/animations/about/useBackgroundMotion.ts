@@ -35,21 +35,27 @@ export function useBackgroundMotion({
 
       if (!orbit || !reticle) return;
 
+      // Continuous orbital revolution around the central reticle (0, 0).
+      gsap.set(orbit, { transformOrigin: "0px 0px" });
       gsap.to(orbit, {
         rotationZ: -360,
         duration: orbitDuration,
         ease: "none",
         repeat: -1,
+        transformOrigin: "0px 0px",
       });
 
+      // Counter-rotate each illustration around its own center so it stays upright.
       visualRefs.current.forEach((visual) => {
         if (!visual) return;
 
+        gsap.set(visual, { transformOrigin: "50% 50%" });
         gsap.to(visual, {
           rotationZ: 360,
           duration: orbitDuration,
           ease: "none",
           repeat: -1,
+          transformOrigin: "50% 50%",
         });
       });
 

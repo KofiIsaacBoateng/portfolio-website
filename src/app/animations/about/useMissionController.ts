@@ -125,7 +125,7 @@ export function useMissionController({
 
   const updateScrollProgress = useCallback(
     (progress: number) => {
-      const ABOUT_START = 0.45;
+      const ABOUT_START = 0.34;
       const ABOUT_END = 0.99;
 
       if (progress < ABOUT_START || progress > ABOUT_END) {

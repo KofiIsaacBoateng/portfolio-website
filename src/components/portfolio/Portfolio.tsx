@@ -59,7 +59,6 @@ export default function Portfolio() {
           transitionProgress={transitionProgress}
           introComplete={introComplete}
           heroRef={heroRef}
-          commandCharRefs={commandCharRefs}
           onMissionProgressRef={onMissionProgressRef}
         />
 

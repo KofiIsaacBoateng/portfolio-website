@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject, useRef } from "react";
+import { RefObject } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,7 +13,6 @@ interface HeroProps {
   transitionProgress: RefObject<{ value: number }>;
   introComplete: boolean;
   heroRef: RefObject<HTMLElement | null>;
-  commandCharRefs: RefObject<(HTMLSpanElement | null)[]>;
   onMissionProgressRef: RefObject<((progress: number) => void) | null>;
 }
 
@@ -21,16 +20,13 @@ export default function Hero({
   transitionProgress,
   introComplete,
   heroRef,
-  commandCharRefs,
   onMissionProgressRef,
 }: HeroProps) {
-  const typingProgress = useRef<{ value: number }>({ value: 0 });
-
   useGSAP(
     () => {
       if (!introComplete) return;
 
-      // HERO REVEAL
+      // 1. HERO REVEAL
       const revealTimeline = gsap.timeline({
         defaults: {
           ease: "power3.out",
@@ -66,10 +62,10 @@ export default function Hero({
         scrollTrigger: {
           trigger: "#home",
           start: "top top",
-          end: () => `+=${window.innerHeight * 2.5}`,
+          end: () => `+=${window.innerHeight * 16}`, // Extended runway for mobile & desktop dwell
           pin: true,
           pinSpacing: true,
-          scrub: 1,
+          scrub: 1.2,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -78,8 +74,7 @@ export default function Hero({
         },
       });
 
-      // 1. Hero content disappears into a pocket
-
+      // [0.00 -> 1.40] Hero content exits & 3D character repositions
       transitionTimeline
         .to(
           ".hero-quote",
@@ -88,10 +83,10 @@ export default function Hero({
             y: -45,
             opacity: 0,
             filter: "blur(8px)",
-            duration: 0.65,
+            duration: 0.9,
             ease: "power3.in",
           },
-          0.05,
+          0.1,
         )
         .to(
           ".hero-name",
@@ -100,10 +95,10 @@ export default function Hero({
             y: -45,
             opacity: 0,
             filter: "blur(12px)",
-            duration: 0.8,
+            duration: 1.0,
             ease: "power3.in",
           },
-          0.05,
+          0.1,
         )
         .to(
           ".hero-description",
@@ -112,55 +107,34 @@ export default function Hero({
             y: -45,
             opacity: 0,
             filter: "blur(8px)",
-            duration: 0.65,
+            duration: 0.9,
+            ease: "power3.in",
+          },
+          0.15,
+        )
+        .to(
+          ".identity-card",
+          {
+            x: -100,
+            y: 45,
+            opacity: 0,
+            filter: "blur(10px)",
+            duration: 1.0,
             ease: "power3.in",
           },
           0.1,
+        )
+        .to(
+          transitionProgress.current,
+          {
+            value: 1,
+            duration: 1.5,
+            ease: "power2.inOut",
+          },
+          0,
         );
 
-      // Identity card fragments
-      transitionTimeline.to(
-        ".identity-card",
-        {
-          x: -100,
-          y: 45,
-          opacity: 0,
-          filter: "blur(10px)",
-          duration: 0.8,
-          ease: "power3.in",
-        },
-        0.05,
-      );
-
-      // 2. Character relocates and camera reframes
-      transitionTimeline.to(
-        transitionProgress.current,
-        {
-          value: 1,
-          duration: 1.2,
-          ease: "power2.inOut",
-        },
-        0,
-      );
-
-      // 3. Command line appears
-      transitionTimeline.fromTo(
-        ".about-command",
-        {
-          autoAlpha: 0,
-          y: 15,
-        },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.25,
-          ease: "power2.out",
-          immediateRender: false,
-        },
-        1.3,
-      );
-
-      // 3. CRT TV Turn-On (Horizontal beam -> Vertical expansion)
+      // [1.50 -> 1.95] CRT TV Turn-On (Monochrome beam -> vertical expand)
       transitionTimeline
         .fromTo(
           ".about-command",
@@ -168,41 +142,41 @@ export default function Hero({
             autoAlpha: 1,
             scaleX: 0,
             scaleY: 0.015,
-            filter: "brightness(2.2)",
+            filter: "brightness(2.5)",
           },
           {
             scaleX: 1,
             scaleY: 0.015,
-            duration: 0.14,
+            duration: 0.18,
             ease: "power2.out",
             immediateRender: false,
           },
-          1.3,
+          1.5,
         )
         .fromTo(
           ".crt-flash",
-          { opacity: 0.9 },
+          { opacity: 0.95 },
           {
             opacity: 0,
-            duration: 0.28,
+            duration: 0.35,
             ease: "power2.out",
             immediateRender: false,
           },
-          1.3,
+          1.5,
         )
         .to(
           ".about-command",
           {
             scaleY: 1,
             filter: "brightness(1)",
-            duration: 0.22,
+            duration: 0.27,
             ease: "expo.out",
             immediateRender: false,
           },
-          1.44,
+          1.68,
         );
 
-      // 4. Command types out (cursor moves with each character)
+      // [2.05 -> 3.85] Command Types Out Slowly
       transitionTimeline.fromTo(
         ".command-char",
         { display: "none" },
@@ -210,50 +184,53 @@ export default function Hero({
           display: "inline-block",
           duration: 0.01,
           stagger: {
-            each: 1.35 / COMMAND.length,
+            each: 1.8 / COMMAND.length,
           },
           ease: "none",
           immediateRender: false,
         },
-        1.7,
+        2.05,
       );
 
-      // 5. CRT TV Shut-Down (Vertical collapse to line -> Horizontal collapse to dot)
+      // [3.85 -> 4.35] PAUSE FOR "ENTER KEY" SOUND EFFECT (0.5 units dead-hold)
+      transitionTimeline.to({}, { duration: 0.5 }, 3.85);
+
+      // [4.35 -> 4.75] CRT TV Shut-Down
       transitionTimeline
         .to(
           ".crt-flash",
           {
-            opacity: 0.85,
-            duration: 0.12,
+            opacity: 0.9,
+            duration: 0.15,
             ease: "power2.in",
             immediateRender: false,
           },
-          3.15,
+          4.35,
         )
         .to(
           ".about-command",
           {
             scaleY: 0.015,
-            filter: "brightness(2.4)",
-            duration: 0.16,
+            filter: "brightness(2.6)",
+            duration: 0.22,
             ease: "power3.in",
             immediateRender: false,
           },
-          3.15,
+          4.35,
         )
         .to(
           ".about-command",
           {
             scaleX: 0,
             autoAlpha: 0,
-            duration: 0.14,
+            duration: 0.18,
             ease: "power2.in",
             immediateRender: false,
           },
-          3.31,
+          4.57,
         );
 
-      // 6. "Executing..." appears & holds before transitioning to About
+      // [4.80 -> 5.75] "Executing..." Appears, Holds for a beat, then Exits
       transitionTimeline
         .fromTo(
           ".executing-banner",
@@ -266,11 +243,11 @@ export default function Hero({
             autoAlpha: 1,
             scale: 1,
             y: 0,
-            duration: 0.22,
+            duration: 0.25,
             ease: "back.out(1.7)",
             immediateRender: false,
           },
-          3.48,
+          4.8,
         )
         .to(
           ".executing-banner",
@@ -278,28 +255,74 @@ export default function Hero({
             autoAlpha: 0,
             y: -12,
             scale: 0.96,
-            duration: 0.22,
+            duration: 0.25,
             ease: "power2.in",
             immediateRender: false,
           },
-          4.05, // Holds visible from 3.48 -> 4.05, then fades out as About enters
+          5.5,
         );
 
-      // ABOUT OVERLAY REVEAL (Sits directly over the z-30 character)
-      transitionTimeline.fromTo(
-        "#about",
-        { autoAlpha: 0 },
-        {
-          autoAlpha: 1,
-          duration: 0.45,
-          ease: "power2.out",
-          immediateRender: false,
-        },
-        4.15,
-      );
+      // [5.55 -> 6.15] DRAMATIC FULL-SCREEN CRT MONITOR BOOT-UP FOR #ABOUT
+      transitionTimeline
+        // Stage 1: Horizontal phosphor beam shoots across the center of the screen
+        .fromTo(
+          "#about",
+          {
+            autoAlpha: 0,
+            scaleX: 0,
+            scaleY: 0.008,
+            filter: "brightness(3)",
+          },
+          {
+            autoAlpha: 1,
+            scaleX: 1,
+            scaleY: 0.008,
+            duration: 0.16,
+            ease: "power2.out",
+            immediateRender: false,
+          },
+          5.55,
+        )
+        // Stage 2: White phosphor flash + vertical screen snap-open
+        .fromTo(
+          ".about-boot-flash",
+          { opacity: 0.85 },
+          {
+            opacity: 0,
+            duration: 0.38,
+            ease: "power2.out",
+            immediateRender: false,
+          },
+          5.68,
+        )
+        .to(
+          "#about",
+          {
+            autoAlpha: 1,
+            scaleY: 1,
+            filter: "brightness(1)",
+            duration: 0.28,
+            ease: "expo.out",
+            immediateRender: false,
+          },
+          5.71,
+        )
+        // Stage 3: HUD header snaps into focus right as the monitor stabilizes
+        .fromTo(
+          ".about-hud-header",
+          { autoAlpha: 0, y: -12 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.25,
+            ease: "power3.out",
+            immediateRender: false,
+          },
+          5.92,
+        );
 
-      // Hold the rest of the timeline (4.6 -> 9.6) so About's study controller has 5 units of scroll
-      transitionTimeline.to({}, { duration: 5.0 }, 4.6);
+      // [6.15 -> 18.65] Extended Scroll Runway for About Target Acquisition & Reading Dwell
+      transitionTimeline.to({}, { duration: 12.5 }, 6.15);
     },
     {
       scope: heroRef,

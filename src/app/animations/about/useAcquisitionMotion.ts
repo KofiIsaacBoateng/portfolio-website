@@ -23,7 +23,7 @@ export function useAcquisitionMotion({
   floatRefs,
   visualRefs,
   reticleMarkerRef,
-  zoomScale = 1.45,
+  zoomScale = 1.5,
 }: AcquisitionOptions) {
   const pauseBackground = useCallback(() => {
     const elements = [
@@ -56,23 +56,41 @@ export function useAcquisitionMotion({
       const rig = cameraRigRef.current;
       const marker = reticleMarkerRef.current;
       const root = rootRef.current;
-      const target = targetRefs.current[index];
+      // Measure the exact inner visual container so drift/padding never skews the center
+      const targetVisual =
+        visualRefs.current[index] ?? targetRefs.current[index];
 
-      if (!rig || !marker || !root || !target) return;
+      if (!rig || !marker || !root || !targetVisual) return;
 
-      gsap.killTweensOf([marker, rig]);
+      gsap.killTweensOf([marker, rig, orbitRef.current]);
+
+      // Ensure reticle is visible and background is sharp while searching
+      gsap.to(marker, {
+        autoAlpha: 1,
+        scale: 1,
+        duration: 0.25,
+        ease: "power2.out",
+      });
+      if (orbitRef.current) {
+        gsap.to(orbitRef.current, {
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 0.35,
+          ease: "power2.out",
+        });
+      }
 
       const search = gsap.timeline();
 
       // Quick reticle scan hops before locking onto target
       for (let i = 0; i < 3; i++) {
-        const x = gsap.utils.random(-95, 95);
-        const y = gsap.utils.random(-75, 75);
+        const x = gsap.utils.random(-90, 90);
+        const y = gsap.utils.random(-70, 70);
 
         search.to(marker, {
           left: x,
           top: y,
-          duration: gsap.utils.random(0.16, 0.28),
+          duration: gsap.utils.random(0.18, 0.28),
           ease: "sine.inOut",
         });
       }
@@ -80,37 +98,62 @@ export function useAcquisitionMotion({
       search.call(() => {
         pauseBackground();
 
-        const targetRect = target.getBoundingClientRect();
+        // Reset rig transform momentarily before measuring to guarantee exact 1:1 local coordinates
+        const currentScale = Number(gsap.getProperty(rig, "scale")) || 1;
+        const currentX = Number(gsap.getProperty(rig, "x")) || 0;
+        const currentY = Number(gsap.getProperty(rig, "y")) || 0;
+
+        const targetRect = targetVisual.getBoundingClientRect();
         const rigRect = rig.getBoundingClientRect();
 
-        const x =
-          targetRect.left +
-          targetRect.width / 2 -
-          (rigRect.left + rigRect.width / 2);
+        // Exact local offset of the target's true center relative to cameraRig's (0,0) origin
+        const targetCenterX = targetRect.left + targetRect.width / 2;
+        const targetCenterY = targetRect.top + targetRect.height / 2;
+        const rigOriginX = rigRect.left + rigRect.width / 2;
+        const rigOriginY = rigRect.top + rigRect.height / 2;
 
-        const y =
-          targetRect.top +
-          targetRect.height / 2 -
-          (rigRect.top + rigRect.height / 2);
+        const localX = (targetCenterX - rigOriginX) / currentScale;
+        const localY = (targetCenterY - rigOriginY) / currentScale;
 
         const alignment = gsap.timeline({
-          onComplete: onLocked,
+          onComplete: () => {
+            // Once locked: hide reticle & blur/dim the background orbit so the focused target stands alone
+            gsap.to(marker, {
+              autoAlpha: 0,
+              scale: 1.25,
+              duration: 0.3,
+              ease: "power2.in",
+            });
+
+            if (orbitRef.current) {
+              gsap.to(orbitRef.current, {
+                opacity: 0.12,
+                filter: "blur(8px)",
+                duration: 0.45,
+                ease: "power2.out",
+              });
+            }
+
+            onLocked?.();
+          },
         });
 
+        // 1. Snap reticle dead-center onto the target's exact local coordinates
         alignment.to(marker, {
-          left: x,
-          top: y,
-          duration: 0.65,
+          left: localX,
+          top: localY,
+          duration: 0.55,
           ease: "power3.inOut",
         });
 
+        // 2. Zoom & center camera rig onto that exact point
         alignment.to(
           rig,
           {
-            x: -x * zoomScale,
-            y: -y * zoomScale,
+            x: currentX - localX * zoomScale,
+            y: currentY - localY * zoomScale,
             scale: zoomScale,
-            duration: 0.95,
+            duration: 0.85,
             ease: "power3.inOut",
           },
           "-=0.1",
@@ -121,9 +164,11 @@ export function useAcquisitionMotion({
     },
     [
       cameraRigRef,
+      orbitRef,
       reticleMarkerRef,
       rootRef,
       targetRefs,
+      visualRefs,
       pauseBackground,
       zoomScale,
     ],
@@ -136,8 +181,7 @@ export function useAcquisitionMotion({
 
       if (!rig || !marker) return;
 
-      // Kill any active acquire/search tweens so reset never fights in-flight hops
-      gsap.killTweensOf([marker, rig]);
+      gsap.killTweensOf([marker, rig, orbitRef.current]);
 
       const timeline = gsap.timeline({
         onComplete: () => {
@@ -146,32 +190,48 @@ export function useAcquisitionMotion({
         },
       });
 
+      // Bring back the reticle & clear background blur for the next search
+      timeline.to(
+        marker,
+        {
+          autoAlpha: 1,
+          scale: 1,
+          left: 0,
+          top: 0,
+          duration: 0.45,
+          ease: "power2.out",
+        },
+        0,
+      );
+
+      if (orbitRef.current) {
+        timeline.to(
+          orbitRef.current,
+          {
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.45,
+            ease: "power2.out",
+          },
+          0,
+        );
+      }
+
       timeline.to(
         rig,
         {
           x: 0,
           y: 0,
           scale: 1,
-          duration: 0.85,
+          duration: 0.75,
           ease: "power3.inOut",
-        },
-        0,
-      );
-
-      timeline.to(
-        marker,
-        {
-          left: 0,
-          top: 0,
-          duration: 0.45,
-          ease: "power2.inOut",
         },
         0,
       );
 
       return timeline;
     },
-    [cameraRigRef, reticleMarkerRef, resumeBackground],
+    [cameraRigRef, orbitRef, reticleMarkerRef, resumeBackground],
   );
 
   return { acquire, release };

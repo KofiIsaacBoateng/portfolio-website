@@ -1,21 +1,20 @@
 export const STUDY_THEME = {
   colors: {
-    primary: "#C4774D",
-    secondary: "#A95735",
-    highlight: "#E18A58",
-    muted: "#75432F",
+    highlight: "#FFFFFF", // Pure crisp white for primary focus & callouts
+    primary: "#E5E7EB", // Bright silver-white for main geometry & labels
+    secondary: "#9CA3AF", // Mid-tone cool grey for outer rings & frames
+    muted: "#4B5563", // Subtle charcoal for background grid/guides
   },
   opacity: {
-    primary: 0.9,
-    secondary: 0.6,
-    guide: 0.28,
-    subtle: 0.15,
-    annotation: 0.75,
+    primary: 1,
+    secondary: 0.72,
+    guide: 0.38,
+    annotation: 0.92,
   },
   strokes: {
-    primary: 1.35,
-    secondary: 0.9,
-    guide: 0.65,
-    fine: 0.45,
+    primary: 2.6, // Bold primary lines (up from thin ~1.2-1.5)
+    secondary: 1.8, // Crisp secondary connections
+    guide: 1.2, // Visible structural guides
+    fine: 1.0, // Ticks & crosshairs
   },
 } as const;

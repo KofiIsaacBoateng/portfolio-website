@@ -35,49 +35,42 @@ export default function SystemArchitectureStudy() {
       className="h-full w-full"
     >
       <defs>
-        <linearGradient
-          id="system-node-gradient"
-          x1="366"
-          y1="81"
-          x2="434"
-          y2="149"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor={colors.highlight} />
-          <stop offset="1" stopColor={colors.secondary} />
-        </linearGradient>
+        <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+        </radialGradient>
       </defs>
 
-      {/* Registration marks */}
+      {/* Corner registration brackets */}
       <g
-        stroke={colors.secondary}
-        strokeWidth={strokes.guide}
+        stroke={colors.highlight}
+        strokeWidth={strokes.secondary}
         opacity={opacity.secondary}
       >
-        <path d="M80 65H105 M80 65V90" />
-        <path d="M695 65H720 M720 65V90" />
-        <path d="M80 545H105 M80 520V545" />
-        <path d="M695 545H720 M720 520V545" />
+        <path d="M75 60H108 M75 60V93" />
+        <path d="M692 60H725 M725 60V93" />
+        <path d="M75 550H108 M75 517V550" />
+        <path d="M692 550H725 M725 517V550" />
       </g>
 
       {/* Structural boundary */}
       <rect
-        x="105"
-        y="65"
-        width="590"
-        height="480"
+        x="100"
+        y="60"
+        width="600"
+        height="490"
         stroke={colors.secondary}
         strokeWidth={strokes.guide}
-        strokeDasharray="4 7"
-        opacity={opacity.secondary}
+        strokeDasharray="5 7"
+        opacity={opacity.guide}
       />
 
-      {/* System boundaries */}
+      {/* System orbits */}
       <ellipse
         cx="400"
         cy="305"
-        rx="260"
-        ry="220"
+        rx="268"
+        ry="225"
         stroke={colors.secondary}
         strokeWidth={strokes.secondary}
         opacity={opacity.secondary}
@@ -86,37 +79,38 @@ export default function SystemArchitectureStudy() {
       <ellipse
         cx="400"
         cy="305"
-        rx="215"
-        ry="175"
+        rx="218"
+        ry="178"
         stroke={colors.primary}
         strokeWidth={strokes.guide}
-        strokeDasharray="3 6"
+        strokeDasharray="4 6"
         opacity={opacity.guide}
       />
 
       {/* Reference axes */}
       <g
-        stroke={colors.primary}
+        stroke={colors.secondary}
         strokeWidth={strokes.guide}
         strokeDasharray="4 7"
         opacity={opacity.guide}
       >
-        <path d="M400 45V555" />
-        <path d="M90 305H710" />
+        <path d="M400 40V560" />
+        <path d="M85 305H715" />
       </g>
 
       {/* Connection paths */}
-      <g
-        stroke={colors.primary}
-        strokeWidth={strokes.secondary}
-        strokeLinecap="round"
-      >
+      <g strokeLinecap="round">
         {connections.map(([x1, y1, x2, y2], index) => (
           <g key={index}>
-            <path d={`M${x1} ${y1} L${x2} ${y2}`} opacity={opacity.secondary} />
-
             <path
-              d={`M${x1 + 4} ${y1 + 4} L${x2 + 4} ${y2 + 4}`}
+              d={`M${x1} ${y1} L${x2} ${y2}`}
+              stroke={colors.primary}
+              strokeWidth={strokes.secondary}
+              opacity={opacity.secondary}
+            />
+            <path
+              d={`M${x1 + 5} ${y1 + 5} L${x2 + 5} ${y2 + 5}`}
+              stroke={colors.secondary}
               strokeWidth={strokes.fine}
               opacity={opacity.guide}
             />
@@ -126,22 +120,40 @@ export default function SystemArchitectureStudy() {
 
       {/* Connection junctions */}
       <g fill={colors.highlight} opacity={opacity.annotation}>
-        <circle cx="317.5" cy="180" r="2" />
-        <circle cx="482.5" cy="180" r="2" />
-        <circle cx="255" cy="332.5" r="2" />
-        <circle cx="545" cy="332.5" r="2" />
-        <circle cx="337.5" cy="462.5" r="2" />
-        <circle cx="462.5" cy="462.5" r="2" />
+        <circle cx="312.5" cy="182.5" r="3" />
+        <circle cx="487.5" cy="182.5" r="3" />
+        <circle cx="245" cy="332.5" r="3" />
+        <circle cx="555" cy="332.5" r="3" />
+        <circle cx="332.5" cy="462.5" r="3" />
+        <circle cx="467.5" cy="462.5" r="3" />
       </g>
 
       {/* Nodes */}
       {nodes.map((node) => (
         <g key={node.label}>
-          {/* Outer boundary */}
+          {/* Subtle dark backing plate so lines behind nodes never muddy the label */}
           <circle
             cx={node.x}
             cy={node.y}
-            r={node.r + 9}
+            r={node.r}
+            fill="#070709"
+            fillOpacity="0.85"
+          />
+
+          {node.type === "primary" && (
+            <circle
+              cx={node.x}
+              cy={node.y}
+              r={node.r + 22}
+              fill="url(#core-glow)"
+            />
+          )}
+
+          {/* Outer dashed ring */}
+          <circle
+            cx={node.x}
+            cy={node.y}
+            r={node.r + 10}
             stroke={colors.secondary}
             strokeWidth={strokes.guide}
             strokeDasharray="3 5"
@@ -155,7 +167,7 @@ export default function SystemArchitectureStudy() {
             r={node.r}
             stroke={node.type === "primary" ? colors.highlight : colors.primary}
             strokeWidth={
-              node.type === "primary" ? strokes.primary : strokes.secondary
+              node.type === "primary" ? strokes.primary + 0.6 : strokes.primary
             }
             opacity={opacity.primary}
           />
@@ -164,7 +176,7 @@ export default function SystemArchitectureStudy() {
           <circle
             cx={node.x}
             cy={node.y}
-            r={node.r * 0.7}
+            r={node.r * 0.68}
             stroke={colors.secondary}
             strokeWidth={strokes.guide}
             opacity={opacity.secondary}
@@ -174,7 +186,7 @@ export default function SystemArchitectureStudy() {
           <circle
             cx={node.x}
             cy={node.y}
-            r={node.type === "primary" ? 4 : 3}
+            r={node.type === "primary" ? 5 : 3.5}
             fill={colors.highlight}
           />
 
@@ -184,17 +196,18 @@ export default function SystemArchitectureStudy() {
             strokeWidth={strokes.fine}
             opacity={opacity.annotation}
           >
-            <path d={`M${node.x - 5} ${node.y}H${node.x + 5}`} />
-            <path d={`M${node.x} ${node.y - 5}V${node.y + 5}`} />
+            <path d={`M${node.x - 7} ${node.y}H${node.x + 7}`} />
+            <path d={`M${node.x} ${node.y - 7}V${node.y + 7}`} />
           </g>
 
-          {/* Labels */}
+          {/* Enlarged, crisp label */}
           <text
             x={node.x}
-            y={node.y + node.r + 23}
-            fill={colors.primary}
-            fontSize="10"
-            letterSpacing="2"
+            y={node.y + node.r + 26}
+            fill={colors.highlight}
+            fontSize="13"
+            fontWeight="600"
+            letterSpacing="2.5"
             textAnchor="middle"
             fontFamily="monospace"
           >
@@ -206,12 +219,12 @@ export default function SystemArchitectureStudy() {
       {/* Directional indicators */}
       <g
         stroke={colors.highlight}
-        strokeWidth={strokes.guide}
+        strokeWidth={strokes.secondary}
         opacity={opacity.annotation}
       >
-        <path d="M400 75V48 M394 55L400 48L406 55" />
-        <path d="M650 305H680 M673 299L680 305L673 311" />
-        <path d="M150 305H120 M127 299L120 305L127 311" />
+        <path d="M400 72V42 M393 50L400 42L407 50" />
+        <path d="M655 305H688 M680 298L688 305L680 312" />
+        <path d="M145 305H112 M120 298L112 305L120 312" />
       </g>
 
       {/* Measurement ticks */}
@@ -221,50 +234,51 @@ export default function SystemArchitectureStudy() {
         opacity={opacity.annotation}
       >
         {Array.from({ length: 13 }, (_, i) => (
-          <path key={i} d={`M${250 + i * 25} 65V${i % 2 === 0 ? 72 : 69}`} />
+          <path key={i} d={`M${250 + i * 25} 60V${i % 2 === 0 ? 70 : 65}`} />
         ))}
       </g>
 
-      {/* Annotations */}
+      {/* Enlarged technical annotations */}
       <g
         fill={colors.primary}
-        fontSize="10"
-        letterSpacing="2"
+        fontSize="12"
+        fontWeight="600"
+        letterSpacing="2.2"
         fontFamily="monospace"
         opacity={opacity.annotation}
       >
-        <text x="105" y="42">
-          SYSTEM TOPOLOGY / 002
+        <text x="100" y="38">
+          SYSTEM TOPOLOGY // 002
         </text>
-        <text x="570" y="125">
+        <text x="565" y="118">
           PRIMARY NODE
         </text>
-        <text x="570" y="142">
-          N = 06
+        <text x="565" y="138" fill={colors.highlight}>
+          N = 06 [ACTIVE]
         </text>
-        <text x="105" y="570">
-          INTERCONNECTION / FLOW / DEPENDENCY
+        <text x="100" y="578">
+          INTERCONNECTION // FLOW // DEPENDENCY
         </text>
       </g>
 
-      {/* Handwritten annotation */}
+      {/* Handwritten callout */}
       <g opacity={opacity.annotation}>
         <text
-          x="535"
-          y="510"
+          x="520"
+          y="515"
           fill={colors.highlight}
-          fontSize="15"
+          fontSize="17"
           fontStyle="italic"
           fontFamily="cursive"
-          transform="rotate(-4 535 510)"
+          transform="rotate(-4 520 515)"
         >
           distributed relationships
         </text>
 
         <path
-          d="M535 520Q515 535 490 525"
+          d="M518 525Q498 540 472 530"
           stroke={colors.highlight}
-          strokeWidth={strokes.guide}
+          strokeWidth={strokes.secondary}
         />
       </g>
     </svg>

@@ -34,25 +34,24 @@ export default function FutureSystemsStudy() {
     [3, 5],
     [4, 5],
   ];
-
   const registrationMarks = [
-    "M90 50H110 M90 50V70",
-    "M710 50H690 M710 50V70",
-    "M90 540H110 M90 540V520",
-    "M710 540H690 M710 540V520",
+    "M85 48H112 M85 48V75",
+    "M715 48H688 M715 48V75",
+    "M85 542H112 M85 542V515",
+    "M715 542H688 M715 542V515",
   ];
 
   return (
     <svg
       viewBox="0 0 800 600"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      xmlns="http://w3.org"
       className="h-full w-full"
       preserveAspectRatio="xMidYMid meet"
     >
       <defs>
         <radialGradient id="future-core-glow">
-          <stop offset="0%" stopColor={colors.highlight} stopOpacity=".22" />
+          <stop offset="0%" stopColor={colors.highlight} stopOpacity="0.28" />
           <stop offset="100%" stopColor={colors.highlight} stopOpacity="0" />
         </radialGradient>
 
@@ -64,27 +63,27 @@ export default function FutureSystemsStudy() {
           y2="390"
         >
           <stop offset="0%" stopColor={colors.highlight} />
-          <stop offset="100%" stopColor={colors.secondary} />
+          <stop offset="100%" stopColor={colors.primary} />
         </linearGradient>
       </defs>
 
       {/* Drawing boundary */}
       <rect
-        x="90"
-        y="50"
-        width="620"
-        height="490"
+        x="85"
+        y="48"
+        width="630"
+        height="494"
         stroke={colors.secondary}
         strokeOpacity={opacity.guide}
-        strokeWidth={strokes.fine}
-        strokeDasharray="4 7"
+        strokeWidth={strokes.guide}
+        strokeDasharray="5 7"
       />
 
       {/* Registration marks */}
       <g
         stroke={colors.highlight}
         strokeOpacity={opacity.annotation}
-        strokeWidth={strokes.fine}
+        strokeWidth={strokes.secondary}
       >
         {registrationMarks.map((path, index) => (
           <path key={index} d={path} />
@@ -96,23 +95,19 @@ export default function FutureSystemsStudy() {
         stroke={colors.secondary}
         strokeOpacity={opacity.guide}
         strokeWidth={strokes.guide}
-        strokeDasharray="4 7"
+        strokeDasharray="5 7"
       >
-        <path d="M400 65V525" />
-        <path d="M115 290H685" />
-        <path d="M180 110L620 470" />
-        <path d="M620 110L180 470" />
+        <path d="M400 60V530" />
+        <path d="M110 290H690" />
+        <path d="M175 105L625 475" />
+        <path d="M625 105L175 475" />
       </g>
 
       {/* Secondary reference geometry */}
-      <g
-        stroke={colors.muted}
-        strokeOpacity={opacity.subtle}
-        strokeWidth={strokes.fine}
-      >
-        <circle cx={center.x} cy={center.y} r="180" strokeDasharray="3 8" />
-        <circle cx={center.x} cy={center.y} r="125" strokeDasharray="2 7" />
-        <path d="M400 80V500 M190 290H610" />
+      <g stroke={colors.muted} strokeOpacity={0.3} strokeWidth={strokes.fine}>
+        <circle cx={center.x} cy={center.y} r="185" strokeDasharray="3 8" />
+        <circle cx={center.x} cy={center.y} r="128" strokeDasharray="2 7" />
+        <path d="M400 75V505 M185 290H615" />
       </g>
 
       {/* Orbital paths */}
@@ -120,10 +115,10 @@ export default function FutureSystemsStudy() {
         <ellipse
           cx={center.x}
           cy={center.y}
-          rx="245"
-          ry="105"
+          rx="250"
+          ry="108"
           transform="rotate(-28 400 290)"
-          stroke={colors.primary}
+          stroke={colors.highlight}
           strokeWidth={strokes.primary}
           strokeOpacity={opacity.primary}
         />
@@ -131,10 +126,10 @@ export default function FutureSystemsStudy() {
         <ellipse
           cx={center.x}
           cy={center.y}
-          rx="225"
-          ry="125"
+          rx="230"
+          ry="128"
           transform="rotate(38 400 290)"
-          stroke={colors.secondary}
+          stroke={colors.primary}
           strokeWidth={strokes.secondary}
           strokeOpacity={opacity.secondary}
         />
@@ -142,12 +137,12 @@ export default function FutureSystemsStudy() {
         <ellipse
           cx={center.x}
           cy={center.y}
-          rx="110"
-          ry="220"
+          rx="114"
+          ry="225"
           transform="rotate(12 400 290)"
           stroke={colors.highlight}
           strokeWidth={strokes.secondary}
-          strokeOpacity={opacity.guide}
+          strokeOpacity={0.48}
           strokeDasharray="5 6"
         />
       </g>
@@ -155,26 +150,26 @@ export default function FutureSystemsStudy() {
       {/* Orbital axis indicators */}
       <g
         stroke={colors.primary}
-        strokeOpacity={opacity.guide}
-        strokeWidth={strokes.fine}
+        strokeOpacity={opacity.secondary}
+        strokeWidth={strokes.secondary}
       >
-        <path d="M155 290H175 M625 290H645" />
-        <path d="M400 65V85 M400 495V515" />
-        <path d="M260 150L275 165 M525 415L540 430" />
+        <path d="M150 290H174 M626 290H650" />
+        <path d="M400 62V84 M400 496V518" />
+        <path d="M258 148L274 164 M526 416L542 432" />
       </g>
 
       {/* Central structure glow */}
       <circle
         cx={center.x}
         cy={center.y}
-        r="115"
+        r="125"
         fill="url(#future-core-glow)"
       />
 
       {/* Central polyhedral structure */}
       <g
         stroke="url(#future-structure-gradient)"
-        strokeWidth={strokes.primary}
+        strokeWidth={strokes.primary + 0.4}
         strokeOpacity={opacity.primary}
       >
         {connections.map(([a, b], index) => (
@@ -187,25 +182,25 @@ export default function FutureSystemsStudy() {
 
       {/* Inner geometric construction */}
       <g
-        stroke={colors.secondary}
+        stroke={colors.primary}
         strokeWidth={strokes.secondary}
         strokeOpacity={opacity.secondary}
       >
         <path
           d="M400 190L455 365L310 255L490 255L345 365Z"
-          strokeDasharray="3 5"
+          strokeDasharray="4 5"
         />
-        <path d="M310 255L455 365 M490 255L345 365" opacity=".55" />
+        <path d="M310 255L455 365 M490 255L345 365" opacity="0.65" />
       </g>
 
       {/* Central reference axes */}
       <g
         stroke={colors.highlight}
-        strokeOpacity={opacity.guide}
-        strokeWidth={strokes.fine}
+        strokeOpacity={opacity.secondary}
+        strokeWidth={strokes.secondary}
       >
-        <path d="M380 290H420 M400 270V310" />
-        <circle cx="400" cy="290" r="22" strokeDasharray="2 5" />
+        <path d="M378 290H422 M400 268V312" />
+        <circle cx="400" cy="290" r="24" strokeDasharray="3 5" />
       </g>
 
       {/* Vertex points */}
@@ -214,17 +209,19 @@ export default function FutureSystemsStudy() {
           <circle
             cx={point.x}
             cy={point.y}
-            r="7"
-            stroke={colors.primary}
+            r="8.5"
+            fill="#070709"
+            fillOpacity="0.9"
+            stroke={colors.highlight}
             strokeWidth={strokes.secondary}
             strokeOpacity={opacity.annotation}
           />
-          <circle cx={point.x} cy={point.y} r="2.5" fill={colors.highlight} />
+          <circle cx={point.x} cy={point.y} r="3" fill={colors.highlight} />
           <path
-            d={`M${point.x - 13} ${point.y}H${point.x + 13} M${point.x} ${point.y - 13}V${point.y + 13}`}
+            d={`M${point.x - 15} ${point.y}H${point.x + 15} M${point.x} ${point.y - 15}V${point.y + 15}`}
             stroke={colors.secondary}
             strokeWidth={strokes.fine}
-            strokeOpacity={opacity.guide}
+            strokeOpacity={opacity.secondary}
           />
         </g>
       ))}
@@ -235,14 +232,16 @@ export default function FutureSystemsStudy() {
           <circle
             cx={point.x}
             cy={point.y}
-            r="11"
-            stroke={colors.primary}
-            strokeWidth={strokes.secondary}
+            r="13"
+            fill="#070709"
+            fillOpacity="0.9"
+            stroke={colors.highlight}
+            strokeWidth={strokes.primary}
             strokeOpacity={opacity.annotation}
           />
-          <circle cx={point.x} cy={point.y} r="3" fill={colors.highlight} />
+          <circle cx={point.x} cy={point.y} r="3.5" fill={colors.highlight} />
           <path
-            d={`M${point.x - 18} ${point.y}H${point.x + 18} M${point.x} ${point.y - 18}V${point.y + 18}`}
+            d={`M${point.x - 20} ${point.y}H${point.x + 20} M${point.x} ${point.y - 20}V${point.y + 20}`}
             stroke={colors.secondary}
             strokeWidth={strokes.fine}
             strokeOpacity={opacity.secondary}
@@ -253,26 +252,26 @@ export default function FutureSystemsStudy() {
       {/* Extended construction rays */}
       <g
         stroke={colors.primary}
-        strokeWidth={strokes.guide}
+        strokeWidth={strokes.secondary}
         strokeOpacity={opacity.secondary}
         strokeDasharray="4 7"
       >
-        <path d="M400 105L400 70" />
-        <path d="M565 210L630 170" />
-        <path d="M510 410L590 455" />
-        <path d="M290 410L210 455" />
-        <path d="M235 210L170 170" />
+        <path d="M400 105L400 68" />
+        <path d="M565 210L635 168" />
+        <path d="M510 410L595 458" />
+        <path d="M290 410L205 458" />
+        <path d="M235 210L165 168" />
       </g>
 
       {/* Directional indicators */}
       <g
         stroke={colors.highlight}
-        strokeWidth={strokes.secondary}
+        strokeWidth={strokes.primary}
         strokeOpacity={opacity.primary}
       >
-        <path d="M625 168L630 170L627 176" />
-        <path d="M585 450L590 455L583 456" />
-        <path d="M175 166L170 170L177 174" />
+        <path d="M629 166L635 168L632 175" />
+        <path d="M590 452L595 458L587 459" />
+        <path d="M171 164L165 168L173 173" />
       </g>
 
       {/* Measurement ticks */}
@@ -282,37 +281,38 @@ export default function FutureSystemsStudy() {
         strokeOpacity={opacity.secondary}
       >
         {Array.from({ length: 11 }, (_, i) => (
-          <path key={i} d={`M${150 + i * 50} 55V${i % 2 === 0 ? 65 : 60}`} />
+          <path key={i} d={`M${150 + i * 50} 52V${i % 2 === 0 ? 64 : 58}`} />
         ))}
         {Array.from({ length: 9 }, (_, i) => (
-          <path key={i} d={`M95 ${100 + i * 50}H${i % 2 === 0 ? 105 : 101}`} />
+          <path key={i} d={`M90 ${100 + i * 50}H${i % 2 === 0 ? 102 : 96}`} />
         ))}
       </g>
 
-      {/* Technical annotations */}
+      {/* Enlarged technical annotations */}
       <g
-        fill={colors.primary}
-        fontSize="10"
-        letterSpacing="1.8"
+        fill={colors.highlight}
+        fontSize="12"
+        fontWeight="600"
+        letterSpacing="2"
         fontFamily="monospace"
         opacity={opacity.annotation}
       >
-        <text x="105" y="30">
-          FUTURE SYSTEMS / 005
+        <text x="100" y="32">
+          FUTURE SYSTEMS // 005
         </text>
-        <text x="535" y="95">
+        <text x="530" y="92">
           ORBITAL PATH
         </text>
-        <text x="535" y="112">
-          VECTOR / 03
+        <text x="530" y="112" fontWeight="700">
+          VECTOR // 03
         </text>
-        <text x="105" y="510">
+        <text x="102" y="506">
           SPATIAL RELATIONSHIPS
         </text>
-        <text x="105" y="525">
+        <text x="102" y="525">
           EMERGENT STRUCTURES
         </text>
-        <text x="415" y="280" fontSize="8">
+        <text x="418" y="282" fontSize="10.5" fontWeight="700">
           CORE
         </text>
       </g>
@@ -320,23 +320,24 @@ export default function FutureSystemsStudy() {
       {/* Handwritten annotations */}
       <g
         fill={colors.highlight}
-        fontSize="15"
+        fontSize="17"
+        fontStyle="italic"
         fontFamily="cursive"
         opacity={opacity.annotation}
       >
-        <text x="545" y="370" transform="rotate(-6 545 370)">
+        <text x="542" y="370" transform="rotate(-6 542 370)">
           evolving systems
         </text>
-        <text x="115" y="385" transform="rotate(-5 115 385)">
+        <text x="112" y="385" transform="rotate(-5 112 385)">
           dimensional study
         </text>
       </g>
 
       <path
-        d="M545 380Q525 395 500 390"
-        stroke={colors.primary}
-        strokeWidth={strokes.fine}
-        strokeOpacity={opacity.secondary}
+        d="M542 382Q522 397 496 392"
+        stroke={colors.highlight}
+        strokeWidth={strokes.secondary}
+        strokeOpacity={opacity.annotation}
       />
     </svg>
   );
